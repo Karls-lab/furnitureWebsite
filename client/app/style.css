@@ -1,0 +1,9 @@
+html {
+    background: hsl(60, 23%, 27%);
+}
+
+.boxBorder {
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
