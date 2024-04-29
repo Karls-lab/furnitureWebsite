@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, doc, setDoc, collection } from "firebase/firestore";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { db, auth } from '../firebase.ts';
-import { notify } from '../utils/toast';
-import { Furniture } from '../types/furniture.js';
+import { db, auth } from './firebase';
+// @ts-ignore
+import { notify } from './utils/toast';
+import { Furniture, initialFurniture } from './types/furniture';
 import { useNavigate } from 'react-router-dom';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
-import { resizeImageWithAspectRatio } from '../utils/imageResizer.jsx';
+// @ts-ignore
+import { resizeImageWithAspectRatio } from './utils/imageResizer';
+import "../app/style.css"
 
 
 const NewFurnitureForm = () => {
-    const [newFurniture, setNewFurniture] = useState(Furniture);
-    const [imageFile, setImageFile] = useState(null);
+    const [newFurniture, setNewFurniture] = useState<Furniture>(initialFurniture);
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
 
@@ -22,15 +25,18 @@ const NewFurnitureForm = () => {
             const imageURL = await uploadImage();
             const furnitureWithImage = { ...newFurniture, image: imageURL };
 
-            await addDoc(collection(db, 'furniture'), furnitureWithImage);
+            const ordersRef = doc(collection(db, "furniture"));
+            furnitureWithImage.id = ordersRef.id;
+            await setDoc(ordersRef, furnitureWithImage);
+
+            // Notify that data was correctly uploaded and clean up the form
             console.log('New furniture item created successfully');
             notify('Furniture item created successfully', 'success');
-            // Optionally, clear the input fields
-            setNewFurniture(Furniture);
+            setNewFurniture({} as Furniture);
             navigate('/dashboard');
 
         } catch (error) {
-            if (error.message === 'Image already exists') {
+            if ((error as Error).message === 'Image already exists') {
                 notify('Image already exists', 'error');
             } else {
                 console.error('Error creating new furniture item:', error);
@@ -46,7 +52,7 @@ const NewFurnitureForm = () => {
 
             // check if the image already exists
             const items = await listAll(ref(storage, 'images'));
-            const fileExists = items.items.some(item => item.name === imageFile.name);
+            const fileExists = items.items.some(item => item.name === imageFile!.name);
             if (fileExists) {
                 const confirmDelete = window.confirm('The fileName already exists. Do you want to overwrite it?');
                 if (!confirmDelete) {
@@ -55,10 +61,10 @@ const NewFurnitureForm = () => {
             }
 
             // Resize the image
-            const resizedImage = await resizeImageWithAspectRatio(imageFile, 300, 300);
+            const resizedImage = await resizeImageWithAspectRatio(imageFile!, 300, 300);
 
             // Upload the image to Firebase Storage
-            const storageRef = ref(storage, `images/${imageFile.name}`);
+            const storageRef = ref(storage, `images/${imageFile!.name}`);
             await uploadBytes(storageRef, resizedImage);
             const imageUrl = await getDownloadURL(storageRef);
             console.log('Image download URL:', imageUrl);
@@ -70,39 +76,49 @@ const NewFurnitureForm = () => {
         }
     };
 
-    // Update new furniture state when input changes
-    const handleInputChange = (key, value) => {
+    // Update edited furniture state when input changes
+    const handleInputChange = (key: keyof Furniture, value: string) => {
+        console.log(key, value);
         setNewFurniture(prevState => ({
             ...prevState,
             [key]: value,
-        }));
+        } as Furniture)); // Explicitly specify prevState type as Furniture
     };
 
 
     return (
-        <div className="max-w-4xl text-white mx-auto py-8">
-            <h1 className="text-3xl font-bold mb-4">New Furniture Form</h1>
-            <div className="flex flex-row flex-wrap gap-x-10 bg-gray-800 rounded-md p-4 mb-4">
+        <div className="max-w-xl mx-auto py-8">
+            <h1 className="text-3xl text-white font-bold mb-4">New Furniture Form</h1>
+            <div className="flex flex-col gap-3">
+
                 {/* Dynamically create input fields based on Furniture object */}
-                {Object.keys(Furniture).map((key, index) => (
-                    <div key={index} className="mb-4 min-w-40 flex flex-col">
-                        <label className="text-white mb-2">{key}</label>
-                        {key === 'image' ? (
+                {Object.keys(newFurniture)
+                    .filter(key => key !== 'id')
+                    .map((key, index) => (
+
+                    <div key={index} className="mb-4 flex flex-col">
+                        <label className="text-white">{key}</label>
+
+                        {key === 'description' ? (
+                            <textarea
+                                value={newFurniture[key as keyof Furniture].toString()} // Convert the value to a string
+                                onChange={(e) => handleInputChange(key as keyof Furniture, e.target.value)}
+                            />
+                        ) : key === 'image' ? (
                             <input
                                 type="file"
-                                onChange={(e) => setImageFile(e.target.files[0])}
-                                className="bg-gray-700 rounded-md p-2 text-white"
+                                onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
                             />
                         ) : (
                             <input
                                 type="text"
-                                value={newFurniture[key] || ''}
-                                onChange={(e) => handleInputChange(key, e.target.value)}
-                                className="bg-gray-700 rounded-md p-2 text-white"
+                                value={newFurniture[key as keyof Furniture].toString()} // Convert the value to a string
+                                onChange={(e) => handleInputChange(key as keyof Furniture, e.target.value)}
                             />
                         )}
                     </div>
                 ))}
+
                 <div className='w-full'>
                     <button onClick={handleCreate} className="bg-green-500 text-white px-8 py-4 rounded-md mr-5">Create</button>
                 </div>

@@ -8,12 +8,13 @@ import About from "./About.jsx"
 import Profile from "./Profile.jsx"
 import Contact from "./Contact.jsx"
 import Store from './Store.jsx';
-import Cart from './Cart.jsx';
-import Orders from './Orders.jsx';
+import Cart from './Cart.tsx';
+import UserOrders from './userOrders.jsx';
+import ManageOrders from './ManageOrders.tsx';
 import ErrorPage from "./error-page.jsx"
 import Dashboard from './dashboard.jsx';
-import FurnitureEditor from './forms/FurnitureEditor.jsx';
-import NewFurnitureForm from './forms/NewFurniture.jsx';
+import NewFurnitureForm from './NewFurniture.tsx';
+import FurnitureEditor from './FurnitureEditor.tsx';
 
 const router = createHashRouter([
   {
@@ -53,8 +54,12 @@ const router = createHashRouter([
         element: <Dashboard />,
       },
       {
+        path: "/my_orders",
+        element: <UserOrders />,
+      },
+      {
         path: "/orders",
-        element: <Orders />,
+        element: <ManageOrders />,
       },
       {
         path: "/dashboard/FurnitureEditor/:furnitureId",

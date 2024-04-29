@@ -8,12 +8,25 @@ import { collection, getDocs, where, query } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
 import { notify } from "./utils/toast.jsx";
 
+import {
+  Sheet,
+  SheetClose,
+  SheetFooter,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+
+
 
 const Store = () => {
   const navigate = useNavigate();
   const [furnitureData, setFurnitureData] = useState([]);
   const [user] = useAuthState(auth);
-  const storage = getStorage();
+  const [sheetOpen, setSheetOpen] = useState(false);
+
     
   useEffect(() => {
     if (user) {
@@ -84,19 +97,48 @@ const Store = () => {
           {furnitureData.map((item) => (
             <div 
               key={item.id} 
-              onClick={() => addItemToCart(item)} 
               className="flex flex-col gap-2 hover:bg-gray-800 p-2 
                 rounded-lg bg-highlight justify-center">
-                <div className="flex bg-muted rounded-md aspect-video mb-2 align-middle m-auto"
-                  style={{ height: "300px", width: "300px"}}>
-                  <img src={item.image} alt={item.name} 
-                    className="object-cover rounded-md m-auto" />
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-xl tracking-tight mt-50">{item.name}</h3>
-                  <p className="text-muted-foreground text-base">{item.description}</p>
-                  <p className="text-lg font-bold mt-2">${item.price}</p>
-                </div>
+
+                <Sheet hideCloseButton>
+                  <SheetTrigger>
+                    {/* Store item content */}
+                    <div className="flex bg-muted rounded-md aspect-video mb-2 align-middle m-auto"
+                      style={{ height: "300px", width: "300px"}}>
+                      <img src={item.image} alt={item.name} 
+                        className="object-cover rounded-md m-auto" />
+                    </div>
+
+                    <div className="flex-grow">
+                      <h3 className="text-xl tracking-tight mt-50">{item.name}</h3>
+                      <p className="text-muted-foreground text-base">{item.description}</p>
+                      <p className="text-lg font-bold mt-2">${item.price}</p>
+                    </div>
+
+                  </SheetTrigger>
+                  <SheetContent className='text-white'>
+                    <SheetHeader>
+                      <SheetTitle className='text-white'>Add {item.name} to cart?</SheetTitle>
+                        <SheetDescription>
+                          Please confirm if you would like to add this item to your cart.
+                          <SheetClose asChild>
+                            <button 
+                              onClick={() => {addItemToCart(item), setSheetOpen(), notify('Item added to cart', 'success')}} 
+                              className="bg-green-500 w-full text-white px-3 py-3 text-xl rounded-md mt-4"
+                              >Add to Cart
+                            </button>
+                          </SheetClose>
+                        </SheetDescription>
+                    </SheetHeader>
+                    <SheetFooter>
+                      <SheetClose asChild>
+                        <button className="bg-red-500 w-full text-white px-3 py-3 text-xl rounded-md mt-4"
+                          >Cancel
+                        </button>
+                      </SheetClose>
+                    </SheetFooter>
+                  </SheetContent>
+                </Sheet>
             </div>
           ))}
 

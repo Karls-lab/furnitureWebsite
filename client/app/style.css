@@ -7,3 +7,25 @@ html {
     border-radius: 10px;
 }
 
+input {
+    background-color: #323b1f;
+    border: 2px solid white;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+textarea {
+    background-color: #323b1f;
+    border: 2px solid white;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    height: 5rem;
+}
+
+
+select {
+    background-color: #323b1f;
+}
+

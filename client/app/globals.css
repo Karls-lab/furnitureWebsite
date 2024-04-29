@@ -8,25 +8,22 @@
   --button0Border: hsl(60, 17%, 20%);
   --button1Border: hsl(60, 38%, 41%);
   --tableBackground: hsl(60, 100%, 10%);
-  --subMenu: hsl(120, 100%, 10%);
+  --subMenu: hsl(69, 100%, 10%);
+  --subMenuHover: hsl(69, 100%, 20%);
 
   --card: rgb(255, 0, 0);
   --card-foreground: rgb(255, 0, 0);
   --popover: rgb(34, 34, 34); /* Dark grey for popover background */
   --popover-foreground: rgb(70, 70, 70); /* Lighter grey for popover text */
   --primary: rgb(34, 51, 14); /* Dark grey for primary background */
-  --primary-foreground: rgb(230, 230, 230); /* Off-white for primary text */
-  --secondary: rgb(230, 230, 230); /* Off-white for secondary background */
   --secondary-foreground: rgb(34, 51, 14); /* Dark grey for secondary text */
-  --muted: rgb(230, 230, 230); /* Off-white for muted background */
   --muted-foreground: rgb(139, 101, 76); /* Light brown for muted text */
-  --accent: rgb(230, 230, 230); /* Off-white for accent background */
   --accent-foreground: rgb(34, 51, 14); /* Dark grey for accent text */
   --destructive: rgb(150, 100, 96); /* Reddish grey for destructive background */
-  --destructive-foreground: rgb(230, 230, 230); /* Off-white for destructive text */
   --border: rgb(214, 82, 232); /* Light purple for border */
   --input: rgb(214, 82, 232); /* Light purple for input background */
   --ring: rgb(70, 70, 70); /* Dark grey for ring */
   --radius: 0.5rem;
+
 }
 

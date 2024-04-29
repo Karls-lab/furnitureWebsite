@@ -10,7 +10,7 @@ const Home = () => {
   const navigation = useNavigate();
 
   return (
-    <div className="bg-background text-white">
+    <div className="bg-background text-white mx-2">
       <div className="">
         <div className="flex gap-8 py-20 lg:py-40 items-center 
           justify-center flex-col text-text-primary">
@@ -26,11 +26,15 @@ const Home = () => {
             </p>
           </div>
           <div className="flex flex-row gap-3">
-            <Button size="lg" className="gap-4 hover:bg-highlight" variant="outline">
-              <Link to="/store">Shop Now</Link>
+            <Button size="lg" 
+              className="gap-4 hover:bg-highlight" variant="outline"
+              onClick={() => navigation('/store')} 
+              >Shop Now
             </Button>
-            <Button size="lg" className="gap-4 hover:bg-highlight">
-              <Link to="/contact">Contact Us</Link>
+            <Button size="lg" 
+              className="gap-4 hover:bg-highlight"
+              onClick={() => navigation('/contact')}  
+              >Contact Us
             </Button>
           </div>
         </div>

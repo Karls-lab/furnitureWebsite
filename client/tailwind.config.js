@@ -28,6 +28,7 @@ module.exports = {
         text: "var(--text-primary)",
         tableBackground: "var(--tableBackground)",
         subMenu: "var(--subMenu)",
+        subMenuHover: "var(--subMenuHover)",
 
         primary: {
           DEFAULT: "hsl(var(--primary))",

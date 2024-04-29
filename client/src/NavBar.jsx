@@ -59,14 +59,25 @@ export const NavBar = () => {
       title: "Dashboard",
       description: "View your order history and track your orders.",
       items: [
-        {
-          title: "Shopping Cart",
-          to: "/cart",
-        },
-        {
-          title: "Profile Information",
-          to: "/profile",
-        },
+
+        ...(customClaims.role === undefined
+        ? [
+            {
+              title: "Shopping Cart",
+              to: "/cart",
+            },
+          ]
+        : []),
+
+        ...(customClaims.role === undefined
+        ? [
+            {
+              title: "My Orders",
+              to: "/my_orders",
+            },
+          ]
+        : []),
+
         ...(customClaims.role === "Editor"
         ? [
             {
@@ -75,10 +86,11 @@ export const NavBar = () => {
             },
           ]
         : []),
+
         ...(customClaims.role === "Editor"
         ? [
             {
-              title: "Orders",
+              title: "Order Management",
               to: "/orders",
             },
           ]
@@ -89,8 +101,9 @@ export const NavBar = () => {
         }
       ],
     },
+
     {
-      title: "Information",
+      title: "Info",
       description: "Founded in 1986, our mission has always been to strive for excellence.",
       items: [
         {
@@ -98,7 +111,7 @@ export const NavBar = () => {
           to: "/about",
         },
         {
-          title: "Profile Info",
+          title: "Profile",
           to: "/profile",
         },
         {
@@ -140,9 +153,9 @@ export const NavBar = () => {
                                 {item.description}
                               </p>
                             </div>
-                            <Button size="sm" className="mt-10">
-                              Book a call today
-                            </Button>
+                            {/* <Button size="sm" className="mt-10"> */}
+                              {/* Book a call today */}
+                            {/* </Button> */}
                           </div>
                           <div className="flex flex-col text-sm h-full justify-start">
                             {item.items?.map((subItem) => (
@@ -150,7 +163,8 @@ export const NavBar = () => {
                                 to={subItem.to}
                                 key={subItem.title}
                                 onClick={() => navigate(subItem.to)}
-                                className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
+                                className="flex flex-row justify-between items-center 
+                                  hover:bg-subMenuHover py-2 px-4 rounded"
                               >
                                 <span>{subItem.title}</span>
                                 <MoveRight className="w-4 h-4 text-muted-foreground" />
@@ -186,10 +200,15 @@ export const NavBar = () => {
         </div>
 
         {/* Logic for mobile screens */}
-        <div className="flex w-12 shrink lg:hidden items-end justify-end">
-          <Button variant="ghost" onClick={() => setOpen(!isOpen)}>
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
+        <div className="flex w-12 shrink lg:hidden items-end justify-center">
+
+          {/* Mobile menu button */}
+          <div className="flex justify-center items-center lg:hidden flex-grow">
+            <Button variant="ghost" onClick={() => setOpen(!isOpen)} className="flex items-center">
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="my-20 w-10 h-10" />}
+            </Button>
+          </div>
+
           {isOpen && (
             <div className="absolute top-20 border-t flex flex-col w-full right-0 bg-background shadow-lg py-4 container gap-8">
               {navigationItems.map((item) => (

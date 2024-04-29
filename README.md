@@ -56,8 +56,16 @@ Orders:
 TODO:
 
 Create custom claims to my user object that google creates for me 
-    - Editors should see orders and update their statuses. 
-    - Make a page that displays an item, and allows customized options? 
-    - Separate user and editor components
+
+MUST DO:
+    - If user is not logged in, tell them when they are at the store,
+        else, tell them data is loading. 
+    - Bug Hunt
+
+BONUS FEATURES:
     - Add a shopping cart Item next to Login
     - Create a utility function that caches data for one day
+    - Allow editors to manage their images and edit them in a photo album
+        Make a page to browse images. When creating or updating, let them choose an image 
+        from their photo album.
+    - Add error messages and such/Make the code more robust.
